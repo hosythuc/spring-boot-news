@@ -1,6 +1,5 @@
 package com.hosythuc.blogv2.controller;
 
-import com.hosythuc.blogv2.model.dto.UserDto;
 import com.hosythuc.blogv2.model.entity.UserEntity;
 import com.hosythuc.blogv2.service.Impl.UserService;
 import com.hosythuc.blogv2.util.Information;
@@ -11,16 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.security.auth.message.config.ServerAuthContext;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,29 +58,6 @@ public class UserController {
             service.delete(user);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }).orElseGet(()->  new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @PostMapping("/registration")
-    public @ResponseBody UserDto registerUserAccount(@Valid @RequestBody UserDto userDto) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUserName(userDto.getUserName());
-        userEntity.setPassword(userDto.getPassword());
-        userEntity.setFullName(userDto.getFullName());
-        if (service.isValid(userEntity)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "username is valid");
-        }
-        if (service.save(userEntity) != null) {
-            return userDto;
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"register is not success");
-        }
-    }
-
-    @GetMapping("/me")
-    public @ResponseBody UserDetails getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (User) auth.getPrincipal();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

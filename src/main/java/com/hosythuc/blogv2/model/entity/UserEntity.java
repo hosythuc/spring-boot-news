@@ -3,12 +3,10 @@ package com.hosythuc.blogv2.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +15,6 @@ import java.util.List;
 @Setter
 @Data
 @Table(name = "users")
-@NoArgsConstructor
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,18 +25,20 @@ public class UserEntity {
     private String fullName;
 
     @Column(name = "username")
+    @NotBlank(message = "It is not null.")
     private String userName;
 
     @Column(name = "password")
+    @NotBlank(message = "It is not null.")
     private String password;
 
-    @Column(name = "created_at")
+  /*  @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    private Date updatedAt;*/
 
     @Column(name = "status")
     private Integer status;
@@ -49,14 +48,4 @@ public class UserEntity {
             @JoinColumn(name = "user_id", referencedColumnName = "id")
     }, inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<RoleEntity> roles;
-
-    @PrePersist
-    private void preInsert() {
-        this.createdAt = new Timestamp(new Date().getTime());
-        this.updatedAt = new Timestamp(new Date().getTime());
-
-        if (this.status == null) {
-            this.status = 0;
-        }
-    }
 }
