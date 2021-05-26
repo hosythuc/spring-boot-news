@@ -48,4 +48,15 @@ public class UserServiceImpl implements UserService {
     public void delete(UserEntity entity) {
         repository.delete(entity);
     }
+
+    @Override
+    public boolean isValid(UserEntity entity) {
+        UserEntity optional = repository.findByUserName(entity.getUserName());
+        if (optional == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 }

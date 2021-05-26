@@ -12,4 +12,5 @@ public interface UserService {
     Optional<UserEntity> findById(Long id);
     UserEntity save(UserEntity entity);
     void delete(UserEntity entity);
+    boolean isValid(UserEntity entity);
 }
